@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="leftmargin">10dp</dimen>
+    <dimen name="rightmargin">10dp</dimen>
+    <dimen name="topMargin">10dp</dimen>
+    <dimen name="bottomMargin">10dp</dimen>
+    <dimen name="viewpadding">5dp</dimen>
+    <dimen name="btn_height">30dp</dimen>
+</resources>

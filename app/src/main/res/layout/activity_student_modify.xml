@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:orientation="vertical">
+
+        <include layout="@layout/layout_header" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/leftmargin"
+            android:layout_marginRight="@dimen/rightmargin"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/grade_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="班级"
+                android:textColor="#333" />
+
+            <EditText
+                android:id="@+id/grade"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="@dimen/viewpadding"
+                android:layout_toLeftOf="@+id/scan"
+                android:layout_toRightOf="@id/grade_label"
+                android:enabled="false" />
+
+            <Button
+                android:id="@+id/scan"
+                style="@style/buttonstyle"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/btn_height"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="10dp"
+                android:text="扫码" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/leftmargin"
+            android:layout_marginRight="@dimen/rightmargin"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="姓名"
+                android:textColor="#333" />
+
+            <EditText
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="@dimen/viewpadding"
+                android:layout_toRightOf="@id/tv_name" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/leftmargin"
+            android:layout_marginRight="@dimen/rightmargin"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="手机号"
+                android:textColor="#333" />
+
+            <EditText
+                android:id="@+id/et_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="@dimen/viewpadding"
+                android:layout_toRightOf="@id/tv_phone" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/leftmargin"
+            android:layout_marginRight="@dimen/rightmargin">
+
+            <TextView
+                android:id="@+id/tv_contact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="紧急联系人"
+                android:textColor="#333" />
+
+            <EditText
+                android:id="@+id/et_phonename"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="@dimen/viewpadding"
+                android:layout_toRightOf="@id/tv_contact"
+                android:hint="请输入联系人姓名" />
+
+            <EditText
+                android:id="@+id/et_contact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/et_phonename"
+                android:layout_below="@id/et_phonename"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="@dimen/viewpadding"
+                android:layout_marginTop="10dp"
+                android:hint="请输入电话号码"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/btn_add"
+                style="@style/buttonstyle"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/btn_height"
+                android:layout_below="@id/et_contact"
+                android:layout_centerHorizontal="true"
+                android:text="添加" />
+
+
+        </RelativeLayout>
+
+        <com.csja.smlocked.View.CustomListView
+            android:id="@+id/list_contact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp" />
+
+        <Button
+            android:id="@+id/btn_save"
+            style="@style/buttonstyle"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/btn_height"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40dp"
+            android:text="完成" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+    </LinearLayout>
+</ScrollView>
