@@ -22,6 +22,7 @@ public class ConfigUtil {
             config = new HashSet<>();
         }
         MLog.i(TAG, "init config " + config.size());
+        int i=0;
     }
 
     public static void addTime(Context context, long startTime, long endTime) {
