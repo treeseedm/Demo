@@ -67,7 +67,7 @@ public class StudentModifyActivity extends Activity {
         findViewById(R.id.scan).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(new Intent(StudentModifyActivity.this, CodeCaptureActivity.class), 1);
+                startActivityForResult(new Intent(StudentModifyActivity.this, TestScanActivity.class), 1);
             }
         });
         findViewById(R.id.btn_save).setOnClickListener(new View.OnClickListener() {

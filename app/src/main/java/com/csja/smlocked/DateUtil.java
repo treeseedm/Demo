@@ -23,11 +23,10 @@ public class DateUtil {
         calendarEnd.setTimeInMillis(endTime);
 
         long currentTime = System.currentTimeMillis();
+        MLog.i(TAG, "startTime:" + startTime + " endTime:" + endTime + " currentTime:" + currentTime);
         if (calendarStart.getTimeInMillis() < currentTime && currentTime < calendarEnd.getTimeInMillis()) {
             return true;
         }
-
-        MLog.i(TAG, "startTime:" + startTime + " endTime:" + endTime + " currentTime:" + currentTime);
         return false;
     }
 

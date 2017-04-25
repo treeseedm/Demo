@@ -96,6 +96,7 @@
         </receiver>
 
         <service android:name=".daemon.Service1" />
+        <service android:name=".daemon.Service1$GrayInnerService" />
 
         <receiver android:name=".daemon.Receiver1" />
 
@@ -107,8 +108,9 @@
             android:name=".daemon.Receiver2"
             android:process=":process2" />
 
-        <activity android:name=".StudentInfoActivity"
-           android:launchMode="singleTop"/>
+        <activity
+            android:name=".StudentInfoActivity"
+            android:launchMode="singleTop" />
         <activity android:name=".CodeCaptureActivity" />
         <activity android:name=".StudentModifyActivity" />
 
@@ -165,6 +167,7 @@
         <service
             android:name="com.baidu.android.pushservice.CommandService"
             android:exported="true" />
+
         <!-- 适配Android N系统必需的ContentProvider声明，写权限包含应用包名 -->
         <provider
             android:name="com.baidu.android.pushservice.PushInfoProvider"
@@ -182,6 +185,7 @@
             android:name=".PhoneListActivity"
             android:theme="@style/Animation.AppCompat.Dialog" />
         <activity android:name=".ParentBindActivity"></activity>
+        <activity android:name=".TestScanActivity" />
     </application>
 
 </manifest>

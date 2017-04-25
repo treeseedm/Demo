@@ -46,6 +46,10 @@ dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.16'
     compile 'com.google.code.gson:gson:2.3'
     testCompile 'junit:junit:4.12'
+
+    compile 'com.google.zxing:core:3.2.1'
+    compile 'cn.bingoogolapple:bga-qrcodecore:1.1.7@aar'
+    compile 'cn.bingoogolapple:bga-zxing:1.1.7@aar'
 }
 
 

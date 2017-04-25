@@ -1,11 +1,14 @@
 package com.csja.smlocked.daemon;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -34,6 +37,9 @@ import java.util.Set;
  * Created by Mars on 12/24/15.
  */
 public class Service1 extends Service {
+    private final static int GRAY_SERVICE_ID = 1001;
+
+
     private long lockTimeIntervel = 2 * 60 * 1000;
     private long keepAliveIntevel = 5 * 60 * 1000;
     private static String TAG = "Service1";
@@ -53,7 +59,7 @@ public class Service1 extends Service {
                         break;
                     }
                 }
-                if(LockedWindow.mLock!=isNeedLocked){
+                if (LockedWindow.mLock != isNeedLocked) {
                     LockedWindow.show(getApplicationContext(), isNeedLocked);
                 }
                 handler.sendEmptyMessageDelayed(0, lockTimeIntervel);
@@ -97,7 +103,7 @@ public class Service1 extends Service {
         //TODO do some thing what you want..
 
         Toast.makeText(getApplicationContext(), "server start", Toast.LENGTH_SHORT).show();
-        MLog.i(getClass().getName(), "onCreate");
+        MLog.i(getClass().getName(), "service onCreate");
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_ON);
         registerReceiver(new SreenBroadCaseReceiver(), filter);
@@ -114,4 +120,39 @@ public class Service1 extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
+
+    /**
+     * 给 API >= 18 的平台上用的灰色保活手段
+     */
+    public static class GrayInnerService extends Service {
+
+        @Override
+        public int onStartCommand(Intent intent, int flags, int startId) {
+            startForeground(GRAY_SERVICE_ID, new Notification());
+            stopForeground(true);
+            stopSelf();
+            return super.onStartCommand(intent, flags, startId);
+        }
+
+        @Nullable
+        @Override
+        public IBinder onBind(Intent intent) {
+            return null;
+        }
+
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if (Build.VERSION.SDK_INT < 18) {
+            startForeground(GRAY_SERVICE_ID, new Notification());//API < 18 ，此方法能有效隐藏Notification上的图标
+        } else {
+            Intent innerIntent = new Intent(this, GrayInnerService.class);
+            startService(innerIntent);
+            startForeground(GRAY_SERVICE_ID, new Notification());
+        }
+
+        return super.onStartCommand(intent, flags, startId);
+    }
+
 }
