@@ -1,10 +1,15 @@
 package com.csja.smlocked;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.view.WindowManager;
+
+import com.csja.smlocked.log.MLog;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Created by mahaifeng on 17/3/28.
@@ -13,33 +18,22 @@ import android.view.WindowManager;
 public class SreenBroadCaseReceiver extends BroadcastReceiver {
     private View view;
     private WindowManager.LayoutParams lp;
+    public static WeakReference<Activity> mActivityWref;
 
     @Override
     public void onReceive(final Context context, Intent intent) {
-//        String action = intent.getAction();
-//        Log.d(getClass().getName(), "action:" + action);
-//        if (action.equals(Intent.ACTION_SCREEN_ON)) {
-//            context.startActivity(new Intent(context, MainActivity.class));
-//            Log.d(getClass().getName(), "ACTION_SCREEN_OFF");
-//            WindowManager windowManager = (WindowManager) context.getSystemService(context.WINDOW_SERVICE);
-//            if (lp == null) {
-//                lp = generateLayoutParams(context);
-//            }
-//            if (view == null) {
-//                view = View.inflate(context, R.layout.layout_locked, null);
-//                view.findViewById(R.id.ll_container).setOnLongClickListener(new View.OnLongClickListener() {
-//                    @Override
-//                    public boolean onLongClick(View v) {
-//                        view.setVisibility(View.GONE);
-//                        return false;
-//                    }
-//                });
-//                windowManager.addView(view, lp);
-//            }
-//            if (view.getVisibility() == View.GONE) {
-//                view.setVisibility(View.VISIBLE);
-//            }
-//        }
+        String action = intent.getAction();
+        MLog.i(getClass().getName(), "action:" + action);
+        if (action.equals(Intent.ACTION_SCREEN_ON)) {
+            if (mActivityWref != null) {
+                Activity activity = mActivityWref.get();
+                if (activity != null) {
+                    activity.finish();
+                }
+            }
+        } else if (action.equals(Intent.ACTION_SCREEN_OFF)) {
+            LiveActivity.actionToLiveActivity(context);
+        }
     }
 
 //    private WindowManager.LayoutParams generateLayoutParams(Context context) {

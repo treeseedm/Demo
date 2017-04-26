@@ -60,7 +60,7 @@ public class StudentModifyActivity extends Activity {
 
 
         TelephonyManager tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-        mPhone.setText(tm.getLine1Number());
+//        mPhone.setText(tm.getLine1Number());
         TextView tvTitle = (TextView) findViewById(R.id.title);
         tvTitle.setText("学生注册");
 

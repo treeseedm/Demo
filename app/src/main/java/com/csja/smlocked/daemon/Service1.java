@@ -1,10 +1,10 @@
 package com.csja.smlocked.daemon;
 
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -21,7 +21,9 @@ import com.csja.smlocked.ConfigUtil;
 import com.csja.smlocked.Constant;
 import com.csja.smlocked.DateUtil;
 import com.csja.smlocked.LockedWindow;
+import com.csja.smlocked.R;
 import com.csja.smlocked.SreenBroadCaseReceiver;
+import com.csja.smlocked.StudentInfoActivity;
 import com.csja.smlocked.log.MLog;
 
 import org.json.JSONException;
@@ -43,6 +45,8 @@ public class Service1 extends Service {
     private long lockTimeIntervel = 2 * 60 * 1000;
     private long keepAliveIntevel = 5 * 60 * 1000;
     private static String TAG = "Service1";
+
+    private static Notification notification;
 
     private Handler handler = new Handler() {
         @Override
@@ -108,12 +112,27 @@ public class Service1 extends Service {
         filter.addAction(Intent.ACTION_SCREEN_ON);
         registerReceiver(new SreenBroadCaseReceiver(), filter);
 
+        IntentFilter filter2 = new IntentFilter();
+        filter2.addAction(Intent.ACTION_SCREEN_OFF);
+        registerReceiver(new SreenBroadCaseReceiver(), filter2);
+
         ConfigUtil.init(getApplicationContext(), ConfigUtil.CONFIGNAME);
 
         handler.sendEmptyMessageDelayed(0, 1000);
 
 
         handler.sendEmptyMessageDelayed(1, keepAliveIntevel);
+
+
+        Notification.Builder builder = new Notification.Builder(this);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                new Intent(this, StudentInfoActivity.class), 0);
+        builder.setContentIntent(contentIntent);
+        builder.setSmallIcon(R.mipmap.ic_launcher);
+        builder.setTicker("Foreground Service Start");
+        builder.setContentTitle("Foreground Service");
+        builder.setContentText("Make this service run in the foreground.");
+        notification = builder.build();
     }
 
     @Override
@@ -144,15 +163,16 @@ public class Service1 extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (Build.VERSION.SDK_INT < 18) {
-            startForeground(GRAY_SERVICE_ID, new Notification());//API < 18 ，此方法能有效隐藏Notification上的图标
-        } else {
-            Intent innerIntent = new Intent(this, GrayInnerService.class);
-            startService(innerIntent);
-            startForeground(GRAY_SERVICE_ID, new Notification());
-        }
+        MLog.i(TAG,"onStartCommand");
+//        if (Build.VERSION.SDK_INT < 18) {
+        startForeground(GRAY_SERVICE_ID, notification);//API < 18 ，此方法能有效隐藏Notification上的图标
+//        } else {
+//            Intent innerIntent = new Intent(this, GrayInnerService.class);
+//            startService(innerIntent);
+//            startForeground(GRAY_SERVICE_ID, notification);
+//        }
 
-        return super.onStartCommand(intent, flags, startId);
+        return Service.START_STICKY;
     }
 
 }

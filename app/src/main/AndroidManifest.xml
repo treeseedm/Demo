@@ -27,6 +27,7 @@
     <!-- 适配Android N系统必需的ContentProvider写权限声明，写权限包含应用包名 -->
     <uses-permission android:name="baidu.push.permission.WRITE_PUSHINFOPROVIDER.com.csja.smlocked" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <permission
         android:name="baidu.push.permission.WRITE_PUSHINFOPROVIDER.com.csja.smlocked"
@@ -168,6 +169,16 @@
             android:name="com.baidu.android.pushservice.CommandService"
             android:exported="true" />
 
+
+        <service
+            android:name=".daemon.LiveService"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+        <service android:name=".daemon.MyJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
         <!-- 适配Android N系统必需的ContentProvider声明，写权限包含应用包名 -->
         <provider
             android:name="com.baidu.android.pushservice.PushInfoProvider"
@@ -186,6 +197,8 @@
             android:theme="@style/Animation.AppCompat.Dialog" />
         <activity android:name=".ParentBindActivity"></activity>
         <activity android:name=".TestScanActivity" />
+        <activity android:name=".LiveActivity" android:launchMode="singleTask"/>
+
     </application>
 
 </manifest>
