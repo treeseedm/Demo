@@ -3,7 +3,10 @@ package com.csja.smlocked;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.media.AudioManager;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -24,10 +27,12 @@ import com.csja.smlocked.log.MLog;
 
 public class LockedWindow {
     private static String TAG = "LockedWindow";
+    private static int THEMEIMAGE_INTEVAL = 5 * 60 * 1000;
     private static View view;
     private static WindowManager.LayoutParams lp;
     public static boolean mLock = false;
     private static String phoneList;
+    private static RelativeLayout mContainer;
 
     public static void show(final Context context, boolean lock) {
         mLock = lock;
@@ -49,6 +54,44 @@ public class LockedWindow {
         }
     }
 
+    private static Handler myHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (view == null) {
+                return;
+            }
+            if (mContainer.getTag() == null) {
+                mContainer.setTag(1);
+                mContainer.setBackground(view.getContext().getResources().getDrawable(R.mipmap.locked1));
+            } else {
+                int tag = (int) mContainer.getTag();
+                switch (tag) {
+                    case 1:
+                        setBackground(2, R.mipmap.lock2, mContainer, view.getContext());
+                        break;
+                    case 2:
+                        setBackground(3, R.mipmap.lock3, mContainer, view.getContext());
+                        break;
+                    case 3:
+                        setBackground(4, R.mipmap.lock4, mContainer, view.getContext());
+                        break;
+                    case 4:
+                        setBackground(5, R.mipmap.lock5, mContainer, view.getContext());
+                        break;
+                    case 5:
+                        setBackground(6, R.mipmap.lock6, mContainer, view.getContext());
+                        break;
+                    case 6:
+                        setBackground(1, R.mipmap.locked1, mContainer, view.getContext());
+                        break;
+                }
+            }
+
+            sendEmptyMessageDelayed(0, THEMEIMAGE_INTEVAL);
+        }
+    };
+
     private static void initView(final Context context) {
         ImageView imageView = (ImageView) view.findViewById(R.id.phone);
         ImageView close = (ImageView) view.findViewById(R.id.close);
@@ -56,7 +99,7 @@ public class LockedWindow {
         TextView lockTipC = (TextView) view.findViewById(R.id.locked_tip2);
         TextView lockTipTop = (TextView) view.findViewById(R.id.tv_lockedtip);
 //        TextView schoolMoto = (TextView) view.findViewById(R.id.tv_school_motto);
-        RelativeLayout container = (RelativeLayout) view.findViewById(R.id.ll_container);
+        mContainer = (RelativeLayout) view.findViewById(R.id.ll_container);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,43 +156,23 @@ public class LockedWindow {
         });
         String tipTop = "课后时间，允许解锁";
         String tipCen = "";
+        AudioManager audioManager = (AudioManager) context.getSystemService(context.AUDIO_SERVICE);
         if (!mLock) {
             unlock.setVisibility(View.VISIBLE);
             tipCen = Constant.getMotto(context).content;
             lockTipTop.setCompoundDrawablesWithIntrinsicBounds(null, null, context.getResources().getDrawable(R.drawable.shape_circle_green), null);
-            container.setBackground(context.getResources().getDrawable(R.mipmap.unlock));
+            mContainer.setBackground(context.getResources().getDrawable(R.mipmap.unlock));
+            myHandler.removeCallbacksAndMessages(null);
+            //声音模式
+            audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
         } else {
             tipTop = "教学时间，禁止解锁";
             unlock.setVisibility(View.GONE);
             lockTipTop.setCompoundDrawablesWithIntrinsicBounds(null, null, context.getResources().getDrawable(R.drawable.shape_circle_red), null);
 
-            if (container.getTag() == null) {
-                container.setTag(1);
-                container.setBackground(context.getResources().getDrawable(R.mipmap.locked1));
-            } else {
-                int tag = (int) container.getTag();
-                switch (tag) {
-                    case 1:
-                        setBackground(2, R.mipmap.lock2, container, context);
-                        break;
-                    case 2:
-                        setBackground(3, R.mipmap.lock3, container, context);
-                        break;
-                    case 3:
-                        setBackground(4, R.mipmap.lock4, container, context);
-                        break;
-                    case 4:
-                        setBackground(5, R.mipmap.lock5, container, context);
-                        break;
-                    case 5:
-                        setBackground(6, R.mipmap.lock6, container, context);
-                        break;
-                    case 6:
-                        setBackground(1, R.mipmap.locked1, container, context);
-                        break;
-                }
-            }
+            myHandler.sendEmptyMessage(0);
 
+            audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
         }
         lockTipTop.setText(tipTop);
         lockTipC.setText(tipCen);

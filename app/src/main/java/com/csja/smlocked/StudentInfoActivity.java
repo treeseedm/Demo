@@ -1,6 +1,7 @@
 package com.csja.smlocked;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,11 +33,15 @@ public class StudentInfoActivity extends Activity {
     private String studentId;
     public static int OVERLAY_PERMISSION_REQ_CODE = 1234;
 
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_info);
         String info = Constant.getStudentInfo(getApplicationContext());
+
+
         if (TextUtils.isEmpty(info)) {
             startActivity(new Intent(this, StudentModifyActivity.class));
             finish();
@@ -70,7 +75,7 @@ public class StudentInfoActivity extends Activity {
             @Override
             public void onClick(View v) {
                 try {
-                    query();
+                    query(StudentInfoActivity.this, studentId);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -79,7 +84,7 @@ public class StudentInfoActivity extends Activity {
 
     }
 
-    private void query() throws JSONException {
+    public static void query(final Context context, String studentId) throws JSONException {
 
         String path = "setting/next7days?studentId=" + URLEncoder.encode("" + studentId);
         JsonObjectReqeustWrapper jsonObjectRequest = new JsonObjectReqeustWrapper(JsonObjectRequest.Method.GET, path, null,
@@ -90,22 +95,22 @@ public class StudentInfoActivity extends Activity {
                             Gson gson = new Gson();
                             TimeConfigResponse timeConfigResponse = gson.fromJson(response.toString(), TimeConfigResponse.class);
                             MLog.i(TAG, response.toString());
-                            Toast.makeText(StudentInfoActivity.this, timeConfigResponse.text, Toast.LENGTH_SHORT).show();
                             if (Constant.SUCCESS.equals(timeConfigResponse.code)) {
-                                ConfigUtil.clearTime(StudentInfoActivity.this);
+                                ConfigUtil.clearTime(context);
                                 List<ConfigEntity> configEntityList = timeConfigResponse.lockTime;
                                 for (ConfigEntity configEntity : configEntityList) {
-                                    ConfigUtil.addTime(StudentInfoActivity.this, configEntity.startTime, configEntity.endTime);
+                                    ConfigUtil.addTime(context, configEntity.startTime, configEntity.endTime);
                                 }
                                 if (timeConfigResponse.motto != null) {
-                                    Constant.saveMotto(StudentInfoActivity.this, timeConfigResponse.motto.creator, timeConfigResponse.motto.content);
+                                    Constant.saveMotto(context, timeConfigResponse.motto.creator, timeConfigResponse.motto.content);
                                 }
-
-                                finish();
+                                if (context instanceof StudentInfoActivity) {
+                                    ((StudentInfoActivity) context).finish();
+                                }
                             }
 
                         } else {
-                            Toast.makeText(StudentInfoActivity.this, getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+                            MLog.i(TAG,"获取数据失败");
                         }
 
 
@@ -114,7 +119,7 @@ public class StudentInfoActivity extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, error.getMessage(), error);
-                Toast.makeText(StudentInfoActivity.this, getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, getString(R.string.server_error), Toast.LENGTH_SHORT).show();
             }
         });
         MyApplication1.mRequestQueue.add(jsonObjectRequest);

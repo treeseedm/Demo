@@ -27,7 +27,7 @@ public class MyApplication2 extends Application {
 
     private DaemonConfigurations createDaemonConfigurations(){
         DaemonConfigurations.DaemonConfiguration configuration1 = new DaemonConfigurations.DaemonConfiguration(
-                "androidproject.com.demo:process1",
+                "androidproject.com.demo",
                 Service1.class.getCanonicalName(),
                 Receiver1.class.getCanonicalName());
         DaemonConfigurations.DaemonConfiguration configuration2 = new DaemonConfigurations.DaemonConfiguration(

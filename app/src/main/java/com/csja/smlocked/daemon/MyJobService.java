@@ -23,18 +23,17 @@ public class MyJobService extends JobService {
     @Override
     public void onCreate() {
         super.onCreate();
-        startJobSheduler();
     }
 
 
-    public void startJobSheduler() {
+    public static void startJobSheduler(Context context) {
         try {
             int id = 1;
             JobInfo.Builder builder = new JobInfo.Builder(id,
-                    new ComponentName(getPackageName(), MyJobService.class.getName()));
+                    new ComponentName(context.getPackageName(), MyJobService.class.getName()));
             builder.setPeriodic(500);  //间隔500毫秒调用onStartJob函数， 500只是为了验证
             builder.setPersisted(true);
-            JobScheduler jobScheduler = (JobScheduler) this.getSystemService(Context.JOB_SCHEDULER_SERVICE);
+            JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
             int ret = jobScheduler.schedule(builder.build());
             // Android24版本才有scheduleAsPackage方法， 期待中
 //Class clz = Class.forName("android.app.job.JobScheduler");

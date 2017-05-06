@@ -16,9 +16,11 @@ import java.lang.ref.WeakReference;
  */
 
 public class SreenBroadCaseReceiver extends BroadcastReceiver {
+    private static String TAG = "SreenBroadCaseReceiver";
     private View view;
     private WindowManager.LayoutParams lp;
     public static WeakReference<Activity> mActivityWref;
+
 
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -29,10 +31,15 @@ public class SreenBroadCaseReceiver extends BroadcastReceiver {
                 Activity activity = mActivityWref.get();
                 if (activity != null) {
                     activity.finish();
+                    mActivityWref=null;
                 }
             }
+//            LockedWindow.show(context,LockedWindow.mLock);
         } else if (action.equals(Intent.ACTION_SCREEN_OFF)) {
             LiveActivity.actionToLiveActivity(context);
+
+
+//            LockedWindow.show(context, LockedWindow.mLock);
         }
     }
 

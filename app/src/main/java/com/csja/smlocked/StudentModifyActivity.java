@@ -1,8 +1,10 @@
 package com.csja.smlocked;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.AppOpsManager;
+import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -134,6 +136,10 @@ public class StudentModifyActivity extends Activity {
         });
 
         askForPermission();
+
+
+
+
     }
 
     private void save() throws JSONException {

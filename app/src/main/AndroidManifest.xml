@@ -156,6 +156,11 @@
                 <data android:scheme="package" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".ShutdownReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
+            </intent-filter>
+        </receiver>
 
         <service
             android:name="com.baidu.android.pushservice.PushService"
@@ -198,6 +203,20 @@
         <activity android:name=".ParentBindActivity"></activity>
         <activity android:name=".TestScanActivity" />
         <activity android:name=".LiveActivity" android:launchMode="singleTask"/>
+        <service
+            android:name=".daemon.IAccessbilityService"
+            android:enabled="true"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" >
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
 
     </application>
 

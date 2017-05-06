@@ -1,6 +1,11 @@
 package com.csja.smlocked;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -12,6 +17,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.csja.smlocked.daemon.MyApplication1;
+import com.csja.smlocked.daemon.Service1;
 import com.csja.smlocked.entity.TimeConfigResponse;
 import com.csja.smlocked.log.MLog;
 import com.csja.smlocked.volley.JsonObjectReqeustWrapper;
@@ -23,12 +29,17 @@ import org.json.JSONObject;
 import java.net.URLEncoder;
 import java.util.List;
 
+import static android.app.AlarmManager.RTC_WAKEUP;
+
 /**
  * Created by mahaifeng on 17/4/21.
  */
 
 public class NotifyMessageController {
     private static String TAG = "NotifyMessageController";
+    public static long keepAliveIntevel = 5 * 60 * 1000;
+    public static long lockTimeIntervel = 30 * 1000;
+    public static long UPDATETIMELOCKED = 12*60*60 * 1000;
 
     public static void bindParent(final Context context, String t,
                                   String description, String customContentString) throws JSONException {
@@ -109,5 +120,19 @@ public class NotifyMessageController {
 
     }
 
+    public static void startTimeAlarm(Context context, int what, long intevel) {
+        AlarmManager alarmManager;
+        alarmManager = (AlarmManager) context.getSystemService(Service.ALARM_SERVICE);
+        Intent intent = new Intent(context,
+                Service1.class);
+        intent.putExtra("what", what);
+        final PendingIntent pi = PendingIntent.getService(
+                context, what, intent, 0);
+        if (Build.VERSION.SDK_INT < 19) {
+            alarmManager.setRepeating(RTC_WAKEUP, 0, intevel, pi);
+        } else {
+            alarmManager.setWindow(RTC_WAKEUP, System.currentTimeMillis() + intevel, 0, pi);
+        }
+    }
 
 }

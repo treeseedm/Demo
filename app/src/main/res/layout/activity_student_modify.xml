@@ -38,7 +38,7 @@
                 android:layout_marginRight="@dimen/viewpadding"
                 android:layout_toLeftOf="@+id/scan"
                 android:layout_toRightOf="@id/grade_label"
-                android:enabled="false" />
+                android:enabled="true" />
 
             <Button
                 android:id="@+id/scan"
@@ -49,7 +49,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="10dp"
-                android:text="扫码" />
+                android:text="扫码获取" />
         </RelativeLayout>
 
         <RelativeLayout

@@ -94,12 +94,7 @@ public class MyApplication1 extends DaemonApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        // 启动百度push
-        PushManager.startWork(getApplicationContext(), PushConstants.LOGIN_TYPE_API_KEY,
-                Utils.getMetaValue(getApplicationContext(), "api_key"));
-
         mRequestQueue = Volley.newRequestQueue(getApplicationContext());
-        MLog.init("");
 
         Thread.setDefaultUncaughtExceptionHandler(new CustomException());
     }

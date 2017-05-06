@@ -15,7 +15,7 @@
 #include "log.h"
 #include "constant.h"
 
-void waitfor_self_observer(char* observer_file_path){
+void waitfor_self_observer(char* observe r_file_path){
 	int lockFileDescriptor = open(observer_file_path, O_RDONLY);
 	if (lockFileDescriptor == -1){
 		LOGE("Watched >>>>OBSERVER<<<< has been ready before watching...");

@@ -21,8 +21,8 @@ import java.util.List;
  */
 
 class LogWriter {
-    private static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy:MM:dd kk:mm:ss:SSS");
-    private static final SimpleDateFormat BAK_FILE_PART = new SimpleDateFormat("yyyy-MM-dd-kk-mm-ss");
+    private static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
+    private static final SimpleDateFormat BAK_FILE_PART = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
 
     private static final int MAX_FILE_SIZE = 1;
     private static final int BUFF_SIZE = 32 * 1024;
@@ -123,6 +123,14 @@ class LogWriter {
     }
 
     private void writeLog(String tag, String msg, long timeMillis) throws IOException {
+        //TODO
+        if (!mLogFile.exists()) {
+            try {
+                mLogFile.createNewFile();
+            } catch (IOException e) {
+//                e.printStackTrace();
+            }
+        }
         String strLog = DATE_TIME_FORMAT.format(timeMillis);
 
         StringBuffer sb = new StringBuffer(strLog);
@@ -139,7 +147,7 @@ class LogWriter {
             bufWriter.write(strLog);
 
             long curMillis = SystemClock.elapsedRealtime();
-//            if (curMillis - mLastMillis >= FLUSH_INTERVAL) {
+            if (curMillis - mLastMillis >= FLUSH_INTERVAL) {
                 bufWriter.flush();
                 mLastMillis = curMillis;
 
@@ -149,7 +157,7 @@ class LogWriter {
 
                     deleteOldBakFiles();
                 }
-//            }
+            }
         }
     }
 
