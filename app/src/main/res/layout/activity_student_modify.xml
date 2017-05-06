@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="班级"
+                android:text="班级编号"
                 android:textColor="#333" />
 
             <EditText

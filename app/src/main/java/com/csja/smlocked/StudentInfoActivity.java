@@ -56,7 +56,7 @@ public class StudentInfoActivity extends Activity {
             jsonObject = new JSONObject(info);
             phone.setText(jsonObject.optString("tel"));
             name.setText(jsonObject.optString("fullname"));
-            grade.setText(jsonObject.optString("className"));
+            grade.setText(jsonObject.optString("classesId"));
             studentId = jsonObject.optString("studentId");
         } catch (JSONException e) {
             e.printStackTrace();

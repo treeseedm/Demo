@@ -3,7 +3,7 @@
     android:id="@+id/ll_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/clock_color_1"
+    android:background="@mipmap/unlock"
     android:orientation="vertical">
 
     <TextView
@@ -17,15 +17,15 @@
         android:text="上课时间不允许解锁" />
 
     <!--<TextView-->
-        <!--android:id="@+id/tv_school_motto"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@id/tv_lockedtip"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:layout_marginBottom="15dp"-->
-        <!--android:layout_marginLeft="10dp"-->
-        <!--android:layout_marginTop="15dp"-->
-        <!--android:text="校训" />-->
+    <!--android:id="@+id/tv_school_motto"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@id/tv_lockedtip"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_marginBottom="15dp"-->
+    <!--android:layout_marginLeft="10dp"-->
+    <!--android:layout_marginTop="15dp"-->
+    <!--android:text="校训" />-->
 
     <TextView
         android:id="@+id/locked_tip2"
@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginLeft="10dp"
-        android:lineSpacingExtra="5dp"
+        android:lineSpacingExtra="25dp"
         android:text="@string/locked_tip"
         android:textColor="@android:color/white"
         android:textSize="20sp" />
@@ -49,7 +49,6 @@
         android:src="@mipmap/phone" />
 
     <Button
-        android:visibility="gone"
         android:id="@+id/unlock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -58,9 +57,11 @@
         android:layout_marginBottom="15dp"
         android:background="@null"
         android:text="解锁"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"
+        android:visibility="gone" />
 
     <ImageView
+        android:id="@+id/close"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentBottom="true"
@@ -68,6 +69,5 @@
         android:layout_marginBottom="15dp"
         android:layout_marginRight="30dp"
         android:src="@mipmap/close"
-        android:id="@+id/close"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 </RelativeLayout>

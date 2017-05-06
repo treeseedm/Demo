@@ -1,10 +1,8 @@
 package com.csja.smlocked;
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.AppOpsManager;
-import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -47,8 +45,8 @@ public class StudentModifyActivity extends Activity {
     private CustomListView mListView;
     private List<String> listContact = new ArrayList<>();
     private ArrayAdapter adapter;
-    private String className;
-    private String classId = "10";
+    //    private String className;
+//    private String classId = "10";
     public static int OVERLAY_PERMISSION_REQ_CODE = 1234;
 
     @Override
@@ -89,10 +87,10 @@ public class StudentModifyActivity extends Activity {
                 JSONObject jsonObject = new JSONObject(info);
                 mPhone.setText(jsonObject.optString("tel"));
                 name.setText(jsonObject.optString("fullname"));
-                className = jsonObject.optString("className");
-                classId = jsonObject.optString("classesId");
+//                className = jsonObject.optString("className");
+//                classId = jsonObject.optString("classesId");
 
-                grade.setText(className);
+                grade.setText(jsonObject.optString("classesId"));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -138,8 +136,6 @@ public class StudentModifyActivity extends Activity {
         askForPermission();
 
 
-
-
     }
 
     private void save() throws JSONException {
@@ -151,7 +147,9 @@ public class StudentModifyActivity extends Activity {
 //            Toast.makeText(this, "请输入联系人姓名", Toast.LENGTH_SHORT).show();
 //            return;
 //        }
-        final String path = "user/regist?fullname=" + URLEncoder.encode(fullName) + "&tel=" + URLEncoder.encode(tel) + "&classesId=" + URLEncoder.encode(classId) + "&channelId=" + URLEncoder.encode(Constant.getChannelId(this));
+        final String tempClassId = grade.getText().toString();
+
+        final String path = "user/regist?fullname=" + URLEncoder.encode(fullName) + "&tel=" + URLEncoder.encode(tel) + "&classesId=" + URLEncoder.encode(tempClassId) + "&channelId=" + URLEncoder.encode(Constant.getChannelId(this));
         MLog.i(TAG, "path=" + path);
 
         JsonObjectReqeustWrapper jsonObjectRequest = new JsonObjectReqeustWrapper(JsonObjectRequest.Method.GET, path, null,
@@ -168,8 +166,8 @@ public class StudentModifyActivity extends Activity {
                                 try {
                                     jsonObject.put("fullname", fullName);
                                     jsonObject.put("tel", tel);
-                                    jsonObject.put("classesId", classId);
-                                    jsonObject.put("className", className);
+                                    jsonObject.put("classesId", tempClassId);
+//                                    jsonObject.put("className", className);
                                     jsonObject.put("channelId", Constant.getChannelId(StudentModifyActivity.this));
                                     jsonObject.putOpt("studentId", response.optString("studentId"));
                                 } catch (JSONException e) {
@@ -204,9 +202,9 @@ public class StudentModifyActivity extends Activity {
         if (resultCode == RESULT_OK && requestCode == 1) {
             String classes = Uri.decode(data.getStringExtra("classes"));
 
-            className = classes.split("#")[1];
-            classId = classes.split("#")[0];
-            grade.setText(className);
+//            className = classes.split("#")[1];
+//            classId = classes.split("#")[0];
+            grade.setText(""+classes.split("#")[0]);
         }
         if (requestCode == OVERLAY_PERMISSION_REQ_CODE) {
             if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {

@@ -39,7 +39,8 @@ public class Constant {
 
     public static void saveContact(Context context, String contact) {
         String temp = getContact(context);
-        temp = temp + ";" + contact;
+        temp = contact + ";" + temp;
+
         SharedPreferences sharedPreferences = context.getSharedPreferences(CONTACT, context.MODE_PRIVATE);
         sharedPreferences.edit().putString("contact", temp).commit();
     }
