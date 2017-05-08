@@ -36,7 +36,7 @@ public class ShutdownReceiver extends BroadcastReceiver {
                 e.printStackTrace();
             }
             MLog.i(TAG, "启动关闭中...");
-            String path = "heart/saveAppException?studentId=" + URLEncoder.encode("" + studentId) + "&time=" + URLEncoder.encode("" + System.currentTimeMillis()) + "&type=" + URLEncoder.encode("关机");
+            String path = "user/switchPhone?studentId=" + URLEncoder.encode("" + studentId) + "&status=" + URLEncoder.encode("" + 1);
             JsonObjectReqeustWrapper jsonObjectRequest = new JsonObjectReqeustWrapper(JsonObjectRequest.Method.GET, path, null,
                     new Response.Listener<JSONObject>() {
                         @Override

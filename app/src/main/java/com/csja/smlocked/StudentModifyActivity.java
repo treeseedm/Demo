@@ -149,7 +149,7 @@ public class StudentModifyActivity extends Activity {
 //        }
         final String tempClassId = grade.getText().toString();
 
-        final String path = "user/regist?fullname=" + URLEncoder.encode(fullName) + "&tel=" + URLEncoder.encode(tel) + "&classesId=" + URLEncoder.encode(tempClassId) + "&channelId=" + URLEncoder.encode(Constant.getChannelId(this));
+        final String path = "user/regist?fullname=" + URLEncoder.encode(fullName) + "&tel=" + URLEncoder.encode(tel) + "&code=" + URLEncoder.encode(tempClassId) + "&channelId=" + URLEncoder.encode(Constant.getChannelId(this));
         MLog.i(TAG, "path=" + path);
 
         JsonObjectReqeustWrapper jsonObjectRequest = new JsonObjectReqeustWrapper(JsonObjectRequest.Method.GET, path, null,
@@ -167,7 +167,7 @@ public class StudentModifyActivity extends Activity {
                                     jsonObject.put("fullname", fullName);
                                     jsonObject.put("tel", tel);
                                     jsonObject.put("classesId", tempClassId);
-//                                    jsonObject.put("className", className);
+                                    jsonObject.put("className", response.optString("className"));
                                     jsonObject.put("channelId", Constant.getChannelId(StudentModifyActivity.this));
                                     jsonObject.putOpt("studentId", response.optString("studentId"));
                                 } catch (JSONException e) {

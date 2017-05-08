@@ -56,7 +56,7 @@ public class StudentInfoActivity extends Activity {
             jsonObject = new JSONObject(info);
             phone.setText(jsonObject.optString("tel"));
             name.setText(jsonObject.optString("fullname"));
-            grade.setText(jsonObject.optString("classesId"));
+            grade.setText(jsonObject.optString("className"));
             studentId = jsonObject.optString("studentId");
         } catch (JSONException e) {
             e.printStackTrace();
@@ -110,7 +110,7 @@ public class StudentInfoActivity extends Activity {
                             }
 
                         } else {
-                            MLog.i(TAG,"获取数据失败");
+                            MLog.i(TAG, "获取数据失败");
                         }
 
 

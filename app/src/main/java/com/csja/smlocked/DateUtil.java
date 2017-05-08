@@ -30,9 +30,10 @@ public class DateUtil {
         return false;
     }
 
-    public static String formatDate(String format) {
+    public static String formatDate(String format, long time) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
-        return simpleDateFormat.format(new Date());
+        Date date=new Date(time);
+        return simpleDateFormat.format(date);
     }
 
     public static List<String> getDate() {

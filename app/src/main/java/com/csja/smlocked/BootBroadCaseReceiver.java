@@ -44,7 +44,7 @@ public class BootBroadCaseReceiver extends BroadcastReceiver {
                     e.printStackTrace();
                 }
                 MLog.i(TAG, "开机自启动...");
-                String path = "heart/saveAppException?studentId=" + URLEncoder.encode("" + studentId) + "&time=" + URLEncoder.encode("" + System.currentTimeMillis()) + "&type=" + URLEncoder.encode("开机");
+                String path = "user/switchPhone?studentId=" + URLEncoder.encode("" + studentId) + "&status=" + URLEncoder.encode("" + 0);
                 JsonObjectReqeustWrapper jsonObjectRequest = new JsonObjectReqeustWrapper(JsonObjectRequest.Method.GET, path, null,
                         new Response.Listener<JSONObject>() {
                             @Override

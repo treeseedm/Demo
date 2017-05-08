@@ -38,15 +38,42 @@
         android:textColor="@android:color/white"
         android:textSize="20sp" />
 
-    <ImageView
+    <TextView
+        android:id="@+id/responsiblepersion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/locktime"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:paddingRight="30dp"
+        android:textColor="@android:color/white"
+
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/locktime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/phone"
+        android:layout_alignLeft="@id/phone"
+        android:layout_marginLeft="10dp"
+        android:text="ddd"
+        android:textColor="@android:color/white"
+        android:visibility="gone" />
+
+    <Button
         android:id="@+id/phone"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_marginBottom="15dp"
         android:layout_marginLeft="30dp"
-        android:src="@mipmap/phone" />
+        android:background="@null"
+        android:src="@mipmap/phone"
+        android:text="紧急联系人"
+        android:textColor="@android:color/white" />
 
     <Button
         android:id="@+id/unlock"
@@ -60,14 +87,16 @@
         android:textColor="@android:color/white"
         android:visibility="gone" />
 
-    <ImageView
-        android:id="@+id/close"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+    <Button
+        android:id="@+id/update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="15dp"
         android:layout_marginRight="30dp"
-        android:src="@mipmap/close"
+        android:background="@null"
+        android:text="更新配置信息"
+        android:textColor="@android:color/white"
         android:visibility="gone" />
 </RelativeLayout>

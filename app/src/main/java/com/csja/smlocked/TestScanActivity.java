@@ -3,6 +3,7 @@ package com.csja.smlocked;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.util.Log;
@@ -62,7 +63,7 @@ public class TestScanActivity extends Activity implements QRCodeView.Delegate {
 
     @Override
     public void onScanQRCodeSuccess(String result) {
-        MLog.i(TAG, "result:" + result);
+        MLog.i(TAG, "result:" + Uri.decode(result));
         vibrate();
         mQRCodeView.startSpot();
         Intent intent = new Intent();
