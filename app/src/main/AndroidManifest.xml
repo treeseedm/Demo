@@ -113,7 +113,8 @@
             android:name=".StudentInfoActivity"
             android:launchMode="singleTop" />
         <activity android:name=".CodeCaptureActivity" />
-        <activity android:name=".StudentModifyActivity" />
+        <activity android:name=".StudentModifyActivity"
+            android:launchMode="singleTask"/>
 
         <!-- push -->
         <!-- push应用定义消息receiver声明 -->

@@ -36,47 +36,14 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         startService(new Intent(MainActivity.this, Service1.class));
 
-//        findViewById(R.id.add).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                add();
-//            }
-//        });
-
-//        mStartTime = (TextView) findViewById(R.id.et_starttime);
-//        mEndTime = (TextView) findViewById(R.id.et_endtime);
-
         if (ConfigUtil.config == null) {
             ConfigUtil.init(getApplicationContext(), ConfigUtil.CONFIGNAME);
         }
         allConfig = new ArrayList<>(ConfigUtil.config);
-
-//        timeAdapter = new TimeAdapter();
-//        ListView list = (ListView) findViewById(R.id.list);
-//        TextView textView = new TextView(this);
-//        textView.setText("锁定时间");
-//        list.addHeaderView(textView);
-//        list.setAdapter(timeAdapter);
-//        mStartTime.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                selectTime();
-//            }
-//        });
-
-        startActivity(new Intent(this, StudentInfoActivity.class));
-//        Window window = getWindow();
-//        //放在左上角
-//        window.setGravity(Gravity.START | Gravity.TOP);
-//        WindowManager.LayoutParams attributes = window.getAttributes();
-//        //宽高设计为1个像素
-//        attributes.width = 1;
-//        attributes.height = 1;
-//        //起始坐标
-//        attributes.x = 0;
-//        attributes.y = 0;
-//        window.setAttributes(attributes);
-
+        Intent intent = new Intent(this, StudentInfoActivity.class);
+        intent.setAction("main");
+        startActivity(intent);
+        finish();
     }
 
     private void add() {

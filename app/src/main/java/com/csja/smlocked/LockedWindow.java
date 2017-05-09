@@ -199,7 +199,13 @@ public class LockedWindow {
             responsiblepersion.setVisibility(View.VISIBLE);
             locktime.setVisibility(View.VISIBLE);
             responsiblepersion.setText("领导人:" + Constant.getMotto(context).creator);
-            locktime.setText("系统将于" + getLastLockTime() + "锁定");
+            if (TextUtils.isEmpty(getLastLockTime())) {
+                locktime.setVisibility(View.GONE);
+            } else {
+                locktime.setVisibility(View.VISIBLE);
+                locktime.setText("系统将于" + getLastLockTime() + "锁定");
+            }
+
         } else {
             tipTop = "教学时间，禁止解锁";
             unlock.setVisibility(View.GONE);

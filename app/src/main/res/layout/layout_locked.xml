@@ -14,7 +14,8 @@
         android:layout_marginTop="20dp"
         android:drawablePadding="5dp"
         android:drawableRight="@drawable/shape_circle_red"
-        android:text="上课时间不允许解锁" />
+        android:text="上课时间不允许解锁"
+        android:textColor="@android:color/white" />
 
     <!--<TextView-->
     <!--android:id="@+id/tv_school_motto"-->
@@ -29,7 +30,7 @@
 
     <TextView
         android:id="@+id/locked_tip2"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginLeft="10dp"

@@ -47,7 +47,11 @@ public class StudentInfoActivity extends Activity {
             finish();
             return;
         }
-
+        if ("main".equals(getIntent().getAction())) {
+            LockedWindow.show(this, false);
+            finish();
+            return;
+        }
         JSONObject jsonObject = null;
         try {
             TextView grade = (TextView) findViewById(R.id.grade);
@@ -144,5 +148,11 @@ public class StudentInfoActivity extends Activity {
             }
 
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        LockedWindow.hide();
+        super.onBackPressed();
     }
 }
