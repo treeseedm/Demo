@@ -3,6 +3,7 @@ package com.csja.smlocked.entity;
 import com.csja.smlocked.ConfigEntity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,7 +22,7 @@ public class TimeConfigResponse implements Serializable {
     public String code;
     public MottoEntity motto;
     public String text;
-    public List<ConfigEntity> lockTime;
+    public ArrayList<ConfigEntity> lockTime;
 
     public static class MottoEntity {
         /**

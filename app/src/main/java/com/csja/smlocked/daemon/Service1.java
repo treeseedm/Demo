@@ -36,6 +36,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -250,7 +251,7 @@ public class Service1 extends Service {
     private void processLockTime(int what) {
         if (what == 0) {
             LASTLOCKTIME = System.currentTimeMillis();
-            Set<ConfigEntity> allConfig = ConfigUtil.config;
+            ArrayList<ConfigEntity> allConfig = ConfigUtil.config;
             Iterator<ConfigEntity> iterator = allConfig.iterator();
             boolean isNeedLocked = false;
             while (iterator.hasNext()) {

@@ -4,7 +4,9 @@ import android.content.Context;
 
 import com.csja.smlocked.log.MLog;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -14,12 +16,12 @@ import java.util.Set;
 public class ConfigUtil {
     private static String TAG = "ConfigUtil";
     public static final String CONFIGNAME = "config";
-    public static Set<ConfigEntity> config = new HashSet<>();
+    public static ArrayList<ConfigEntity> config = new ArrayList<>();
 
     public static void init(Context context, String name) {
         config = SerializeUtils.deSerializeObject(context, name);
         if (config == null) {
-            config = new HashSet<>();
+            config = new ArrayList<>();
         }
         MLog.i(TAG, "init config " + config.size());
     }

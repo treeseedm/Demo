@@ -48,7 +48,7 @@ public class StudentInfoActivity extends Activity {
             return;
         }
         if ("main".equals(getIntent().getAction())) {
-            LockedWindow.show(this, false);
+            LockedWindow.show(getApplicationContext(), false);
             finish();
             return;
         }
@@ -100,6 +100,7 @@ public class StudentInfoActivity extends Activity {
                             TimeConfigResponse timeConfigResponse = gson.fromJson(response.toString(), TimeConfigResponse.class);
                             MLog.i(TAG, response.toString());
                             if (Constant.SUCCESS.equals(timeConfigResponse.code)) {
+                                Toast.makeText(context, "更新成功", Toast.LENGTH_SHORT).show();
                                 ConfigUtil.clearTime(context);
                                 List<ConfigEntity> configEntityList = timeConfigResponse.lockTime;
                                 for (ConfigEntity configEntity : configEntityList) {
@@ -111,9 +112,13 @@ public class StudentInfoActivity extends Activity {
                                 if (context instanceof StudentInfoActivity) {
                                     ((StudentInfoActivity) context).finish();
                                 }
+                                LockedWindow.initView(context);
+                            } else {
+                                Toast.makeText(context, "更新失败", Toast.LENGTH_SHORT).show();
                             }
 
                         } else {
+                            Toast.makeText(context, "更新失败", Toast.LENGTH_SHORT).show();
                             MLog.i(TAG, "获取数据失败");
                         }
 
@@ -122,6 +127,7 @@ public class StudentInfoActivity extends Activity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "更新失败", Toast.LENGTH_SHORT).show();
                 Log.e(TAG, error.getMessage(), error);
                 //Toast.makeText(context, getString(R.string.server_error), Toast.LENGTH_SHORT).show();
             }

@@ -1,12 +1,14 @@
 package com.csja.smlocked;
 
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
 
 /**
  * Created by mahaifeng on 17/4/1.
  */
 
-public class ConfigEntity implements Serializable {
+public class ConfigEntity implements Serializable, Comparable {
     /**
      * startTime : 1492642800000
      * endTime : 1492646400000
@@ -26,5 +28,15 @@ public class ConfigEntity implements Serializable {
                 "startDate=" + startTime +
                 ", endDate=" + endTime +
                 '}';
+    }
+
+    @Override
+    public int compareTo(@NonNull Object o) {
+        ConfigEntity configEntity = (ConfigEntity) o;
+        if (configEntity.startTime > this.startTime) {
+            return 1;
+        } else {
+            return -1;
+        }
     }
 }

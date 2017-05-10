@@ -24,8 +24,9 @@ import com.csja.smlocked.log.MLog;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
-import java.util.Set;
 
 /**
  * Created by mahaifeng on 17/4/1.
@@ -40,7 +41,7 @@ public class LockedWindow {
     private static String phoneList;
     private static RelativeLayout mContainer;
 
-    public static void show(final Context context, boolean lock) {
+    public synchronized static void show(final Context context, boolean lock) {
         mLock = lock;
         WindowManager windowManager = (WindowManager) context.getSystemService(context.WINDOW_SERVICE);
         if (lp == null) {
@@ -98,39 +99,40 @@ public class LockedWindow {
         }
     };
 
-    private static void initView(final Context context) {
-        Button tvPhone = (Button) view.findViewById(R.id.phone);
+    public static void initView(final Context context) {
+        if (view != null) {
+            Button tvPhone = (Button) view.findViewById(R.id.phone);
 //        ImageView close = (ImageView) view.findViewById(R.id.close);
-        Button unlock = (Button) view.findViewById(R.id.unlock);
-        Button update = (Button) view.findViewById(R.id.update);
-        TextView lockTipC = (TextView) view.findViewById(R.id.locked_tip2);
-        TextView lockTipTop = (TextView) view.findViewById(R.id.tv_lockedtip);
+            Button unlock = (Button) view.findViewById(R.id.unlock);
+            Button update = (Button) view.findViewById(R.id.update);
+            TextView lockTipC = (TextView) view.findViewById(R.id.locked_tip2);
+            TextView lockTipTop = (TextView) view.findViewById(R.id.tv_lockedtip);
 
-        TextView responsiblepersion = (TextView) view.findViewById(R.id.responsiblepersion);
-        TextView locktime = (TextView) view.findViewById(R.id.locktime);
+            TextView responsiblepersion = (TextView) view.findViewById(R.id.responsiblepersion);
+            TextView locktime = (TextView) view.findViewById(R.id.locktime);
 //        TextView schoolMoto = (TextView) view.findViewById(R.id.tv_school_motto);
-        mContainer = (RelativeLayout) view.findViewById(R.id.ll_container);
-        tvPhone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            mContainer = (RelativeLayout) view.findViewById(R.id.ll_container);
+            tvPhone.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                View pop = View.inflate(context, R.layout.activity_phone_list, null);
+                    View pop = View.inflate(context, R.layout.activity_phone_list, null);
 
-                PopupWindow popupWindow = new PopupWindow(pop, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT, true);
-                popupWindow.setTouchable(true);
-                popupWindow.setOutsideTouchable(true);
-                popupWindow.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.shape_rec_white));
-                CustomListView listView = (CustomListView) pop.findViewById(R.id.list);
-                phoneList = Constant.getContact(context);
+                    PopupWindow popupWindow = new PopupWindow(pop, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT, true);
+                    popupWindow.setTouchable(true);
+                    popupWindow.setOutsideTouchable(true);
+                    popupWindow.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.shape_rec_white));
+                    CustomListView listView = (CustomListView) pop.findViewById(R.id.list);
+                    phoneList = Constant.getContact(context);
 //                if (TextUtils.isEmpty(phoneList)) {
 //                    phoneList = "18201686357";
 //                }
-                ArrayAdapter arrayAdapter = new ArrayAdapter(context, android.R.layout.simple_expandable_list_item_1, phoneList.split(";"));
-                listView.setAdapter(arrayAdapter);
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        String p = phoneList.split(";")[position];
+                    ArrayAdapter arrayAdapter = new ArrayAdapter(context, android.R.layout.simple_expandable_list_item_1, phoneList.split(";"));
+                    listView.setAdapter(arrayAdapter);
+                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            String p = phoneList.split(";")[position];
 //                        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + p));
 //                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                        context.startActivity(intent);
@@ -140,15 +142,15 @@ public class LockedWindow {
 //
 //                                    100);
 //                        }else{
-                        callPhone(context, p);
+                            callPhone(context, p);
 //                        }
 
-                    }
-                });
-                popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+                        }
+                    });
+                    popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
 
-            }
-        });
+                }
+            });
 //        close.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -158,70 +160,72 @@ public class LockedWindow {
 ////                context.startActivity(intent);
 //            }
 //        });
-        unlock.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hide();
-            }
-        });
-        String tipTop = "课后时间，允许解锁";
-        String tipCen = "";
-        AudioManager audioManager = (AudioManager) context.getSystemService(context.AUDIO_SERVICE);
-        if (!mLock) {
-            unlock.setVisibility(View.VISIBLE);
-            tipCen = Constant.getMotto(context).content;
-            lockTipTop.setCompoundDrawablesWithIntrinsicBounds(null, null, context.getResources().getDrawable(R.drawable.shape_circle_green), null);
-            mContainer.setBackground(context.getResources().getDrawable(R.mipmap.unlock));
-            myHandler.removeCallbacksAndMessages(null);
-            //声音模式
-            audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-
-            update.setVisibility(View.VISIBLE);
-            update.setOnClickListener(new View.OnClickListener() {
+            unlock.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    JSONObject jsonObject = null;
-                    try {
-                        String info = Constant.getStudentInfo(context);
-                        if (!TextUtils.isEmpty(info)) {
-                            jsonObject = new JSONObject(info);
-                            if (jsonObject.has("studentId")) {
-                                StudentInfoActivity.query(context, jsonObject.optString("studentId"));
-                            }
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    hide();
                 }
             });
+            String tipTop = "课后时间，允许解锁";
+            String tipCen = "";
+            AudioManager audioManager = (AudioManager) context.getSystemService(context.AUDIO_SERVICE);
+            if (!mLock) {
+                unlock.setVisibility(View.VISIBLE);
+                tipCen = Constant.getMotto(context).content;
+                lockTipTop.setCompoundDrawablesWithIntrinsicBounds(null, null, context.getResources().getDrawable(R.drawable.shape_circle_green), null);
+                mContainer.setBackground(context.getResources().getDrawable(R.mipmap.unlock));
+                myHandler.removeCallbacksAndMessages(null);
+                //声音模式
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
 
-            responsiblepersion.setVisibility(View.VISIBLE);
-            locktime.setVisibility(View.VISIBLE);
-            responsiblepersion.setText("领导人:" + Constant.getMotto(context).creator);
-            if (TextUtils.isEmpty(getLastLockTime())) {
-                locktime.setVisibility(View.GONE);
-            } else {
+                update.setVisibility(View.VISIBLE);
+                update.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        JSONObject jsonObject = null;
+                        try {
+                            String info = Constant.getStudentInfo(context);
+                            if (!TextUtils.isEmpty(info)) {
+                                jsonObject = new JSONObject(info);
+                                if (jsonObject.has("studentId")) {
+                                    StudentInfoActivity.query(context, jsonObject.optString("studentId"));
+                                }
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+                responsiblepersion.setVisibility(View.VISIBLE);
                 locktime.setVisibility(View.VISIBLE);
-                locktime.setText("系统将于" + getLastLockTime() + "锁定");
+                responsiblepersion.setText("倡导人:" + Constant.getMotto(context).creator);
+                if (TextUtils.isEmpty(getLastLockTime())) {
+                    locktime.setVisibility(View.GONE);
+                } else {
+                    locktime.setVisibility(View.VISIBLE);
+                    locktime.setText("系统将于" + getLastLockTime() + "锁定");
+                }
+
+            } else {
+                tipTop = "教学时间，禁止解锁";
+                unlock.setVisibility(View.GONE);
+                lockTipTop.setCompoundDrawablesWithIntrinsicBounds(null, null, context.getResources().getDrawable(R.drawable.shape_circle_red), null);
+
+                myHandler.sendEmptyMessage(0);
+
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+
+                update.setVisibility(View.GONE);
+                responsiblepersion.setVisibility(View.GONE);
+                locktime.setVisibility(View.GONE);
             }
 
-        } else {
-            tipTop = "教学时间，禁止解锁";
-            unlock.setVisibility(View.GONE);
-            lockTipTop.setCompoundDrawablesWithIntrinsicBounds(null, null, context.getResources().getDrawable(R.drawable.shape_circle_red), null);
-
-            myHandler.sendEmptyMessage(0);
-
-            audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-
-            update.setVisibility(View.GONE);
-            responsiblepersion.setVisibility(View.GONE);
-            locktime.setVisibility(View.GONE);
+            lockTipTop.setText(tipTop);
+            lockTipC.setText(tipCen);
         }
 
-        lockTipTop.setText(tipTop);
-        lockTipC.setText(tipCen);
     }
 
     private static void setBackground(int tag, int lock, RelativeLayout container, Context context) {
@@ -261,7 +265,8 @@ public class LockedWindow {
 
     private static String getLastLockTime() {
 
-        Set<ConfigEntity> allConfig = ConfigUtil.config;
+        ArrayList<ConfigEntity> allConfig = ConfigUtil.config;
+        Collections.sort(allConfig);
         Iterator<ConfigEntity> iterator = allConfig.iterator();
         while (iterator.hasNext()) {
             ConfigEntity configEntity = iterator.next();
