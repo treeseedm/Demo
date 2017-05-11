@@ -26,6 +26,14 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
 
@@ -39,7 +47,7 @@ public class NotifyMessageController {
     private static String TAG = "NotifyMessageController";
     public static long keepAliveIntevel = 5 * 60 * 1000;
     public static long lockTimeIntervel = 30 * 1000;
-    public static long UPDATETIMELOCKED = 12*60*60 * 1000;
+    public static long UPDATETIMELOCKED = 12 * 60 * 60 * 1000;
 
     public static void bindParent(final Context context, String t,
                                   String description, String customContentString) throws JSONException {
@@ -135,4 +143,90 @@ public class NotifyMessageController {
         }
     }
 
+    /**
+     * 从网络Url中下载文件
+     *
+     * @param urlStr
+     * @param fileName
+     * @param savePath
+     * @throws IOException
+     */
+    public static void downLoadFromUrl(String urlStr, String fileName, String savePath) throws IOException {
+        URL url = new URL(urlStr);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        //设置超时间为3秒
+        conn.setConnectTimeout(3 * 1000);
+        //防止屏蔽程序抓取而返回403错误
+        conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+
+        //得到输入流
+        InputStream inputStream = conn.getInputStream();
+        //获取自己数组
+        byte[] getData = readInputStream(inputStream);
+
+        //文件保存位置
+        File saveDir = new File(savePath);
+        if (!saveDir.exists()) {
+            saveDir.mkdir();
+        }
+        File file = new File(saveDir + File.separator + fileName);
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(getData);
+        if (fos != null) {
+            fos.close();
+        }
+        if (inputStream != null) {
+            inputStream.close();
+        }
+        System.out.println("info:" + url + " download success");
+    }
+
+    /**
+     * 从输入流中获取字节数组
+     *
+     * @param inputStream
+     * @return
+     * @throws IOException
+     */
+    public static byte[] readInputStream(InputStream inputStream) throws IOException {
+        byte[] buffer = new byte[1024];
+        int len = 0;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        while ((len = inputStream.read(buffer)) != -1) {
+            bos.write(buffer, 0, len);
+        }
+        bos.close();
+        return bos.toByteArray();
+    }
+
+    public static void shutdown() {
+        try {
+
+//获得ServiceManager类
+            Class ServiceManager = Class
+                    .forName("android.os.ServiceManager");
+
+//获得ServiceManager的getService方法
+            Method getService = ServiceManager.getMethod("getService", java.lang.String.class);
+
+//调用getService获取RemoteService
+            Object oRemoteService = getService.invoke(null, Context.POWER_SERVICE);
+
+//获得IPowerManager.Stub类
+            Class cStub = Class
+                    .forName("android.os.IPowerManager$Stub");
+//获得asInterface方法
+            Method asInterface = cStub.getMethod("asInterface", android.os.IBinder.class);
+//调用asInterface方法获取IPowerManager对象
+            Object oIPowerManager = asInterface.invoke(null, oRemoteService);
+//获得shutdown()方法
+            Method shutdown = oIPowerManager.getClass().getMethod("shutdown", boolean.class, boolean.class);
+//调用shutdown()方法
+            shutdown.invoke(oIPowerManager, false, true);
+
+        } catch (Exception e) {
+            MLog.e(TAG, e.toString(), e);
+        }
+
+    }
 }

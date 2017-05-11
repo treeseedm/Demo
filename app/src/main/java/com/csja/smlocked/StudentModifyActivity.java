@@ -204,7 +204,7 @@ public class StudentModifyActivity extends Activity {
 
 //            className = classes.split("#")[1];
 //            classId = classes.split("#")[0];
-            grade.setText(""+classes.split("#")[0]);
+            grade.setText("" + classes.split("#")[0]);
         }
         if (requestCode == OVERLAY_PERMISSION_REQ_CODE) {
             if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {

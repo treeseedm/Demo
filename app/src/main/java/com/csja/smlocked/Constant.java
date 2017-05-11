@@ -16,6 +16,7 @@ public class Constant {
     public static String SUCCESS = "success";
     public static String MOTTO = "motto";
     public static String CONTACT = "contact";
+    public static String DOWNLOAD_PATH="/sdcard/smlocked/apk/";
 
     public static void saveChannelId(Context context, String channelId) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(CHANNELID, context.MODE_PRIVATE);

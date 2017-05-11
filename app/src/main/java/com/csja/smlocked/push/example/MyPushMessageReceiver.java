@@ -2,7 +2,6 @@ package com.csja.smlocked.push.example;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.baidu.android.pushservice.PushMessageReceiver;
@@ -84,7 +83,10 @@ public class MyPushMessageReceiver extends PushMessageReceiver {
     @Override
     public void onMessage(Context context, String message,
                           String customContentString) {
-        Toast.makeText(context,"收到时间配置",Toast.LENGTH_LONG).show();
+        if (TextUtils.isEmpty(Constant.getStudentInfo(context))) {
+            return;
+        }
+        Toast.makeText(context, "收到时间配置", Toast.LENGTH_LONG).show();
         String messageString = "透传消息 onMessage=\"" + message
                 + "\" customContentString=" + customContentString;
         MLog.i(TAG, messageString);
