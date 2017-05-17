@@ -2,8 +2,11 @@ package com.csja.smlocked;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 import com.csja.smlocked.entity.TimeConfigResponse;
+
+import org.json.JSONObject;
 
 /**
  * Created by mahaifeng on 17/4/18.
@@ -16,7 +19,9 @@ public class Constant {
     public static String SUCCESS = "success";
     public static String MOTTO = "motto";
     public static String CONTACT = "contact";
-    public static String DOWNLOAD_PATH="/sdcard/smlocked/apk/";
+    public static String DOWNLOAD_PATH = "/sdcard/smlocked/apk/";
+    public static String UPDATEAPK_ACTION = "com.csja.smlocked.update";
+    public static String LOCKEDDATA = "lockeddata";
 
     public static void saveChannelId(Context context, String channelId) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(CHANNELID, context.MODE_PRIVATE);
@@ -65,5 +70,18 @@ public class Constant {
         mottoEntity.creator = sharedPreferences.getString("creator", "");
         mottoEntity.content = sharedPreferences.getString("content", "");
         return mottoEntity;
+    }
+
+    public static long getStudentId(Context context) {
+        try {
+            String info = Constant.getStudentInfo(context);
+            if (!TextUtils.isEmpty(info)) {
+                JSONObject jsonObject = new JSONObject(info);
+                return jsonObject.optLong("studentId");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

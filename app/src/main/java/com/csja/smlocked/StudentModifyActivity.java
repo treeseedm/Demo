@@ -102,9 +102,9 @@ public class StudentModifyActivity extends Activity {
 
 
         adapter = new ArrayAdapter(this, android.R.layout.test_list_item, listContact);
-        TextView textView = new TextView(this);
-        textView.setText("已添加联系人");
-        mListView.addHeaderView(textView);
+//        TextView textView = new TextView(this);
+//        textView.setText("已添加联系人");
+//        mListView.addHeaderView(textView);
         mListView.setAdapter(adapter);
 
 

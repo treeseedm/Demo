@@ -34,9 +34,9 @@ public class ConfigEntity implements Serializable, Comparable {
     public int compareTo(@NonNull Object o) {
         ConfigEntity configEntity = (ConfigEntity) o;
         if (configEntity.startTime > this.startTime) {
-            return 1;
-        } else {
             return -1;
+        } else {
+            return 1;
         }
     }
 }

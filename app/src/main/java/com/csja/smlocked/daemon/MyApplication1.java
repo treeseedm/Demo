@@ -26,6 +26,7 @@ public class MyApplication1 extends DaemonApplication {
 
         @Override
         public void uncaughtException(Thread t, Throwable e) {
+            e.printStackTrace();
             MLog.i("CustomException", "CustomException->" + e.getMessage());
         }
     }

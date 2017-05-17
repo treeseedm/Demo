@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.csja.smlocked.daemon.Service1;
 import com.csja.smlocked.log.MLog;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 
 /**
@@ -31,25 +34,26 @@ public class SreenBroadCaseReceiver extends BroadcastReceiver {
                 Activity activity = mActivityWref.get();
                 if (activity != null) {
                     activity.finish();
-                    mActivityWref=null;
+                    mActivityWref = null;
                 }
             }
-//            LockedWindow.show(context,LockedWindow.mLock);
+            Intent intentServer = new Intent(context,
+                    Service1.class);
+            intentServer.putExtra("what", 0);
+            context.startService(intentServer);
         } else if (action.equals(Intent.ACTION_SCREEN_OFF)) {
             LiveActivity.actionToLiveActivity(context);
-
-
-//            LockedWindow.show(context, LockedWindow.mLock);
+        } else if (Constant.UPDATEAPK_ACTION.equals(action)) {
+            //文件保存位置
+            File saveDir = new File(Constant.DOWNLOAD_PATH);
+            for (File file : saveDir.listFiles()) {
+                Intent updateIntent = new Intent(Intent.ACTION_VIEW);
+                updateIntent.setDataAndType(Uri.fromFile(file),
+                        "application/vnd.android.package-archive");
+                context.startActivity(intent);
+                break;
+            }
         }
     }
 
-//    private WindowManager.LayoutParams generateLayoutParams(Context context) {
-//        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-//        lp.type = WindowManager.LayoutParams.TYPE_TOAST;
-//        lp.flags |= WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD;
-//        lp.x = 0;
-//        lp.y = 0;
-//        lp.format = PixelFormat.TRANSLUCENT;
-//        return lp;
-//    }
 }

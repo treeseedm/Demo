@@ -38,7 +38,6 @@ import org.json.JSONObject;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Set;
 
 import static android.app.AlarmManager.RTC_WAKEUP;
 
@@ -142,6 +141,10 @@ public class Service1 extends Service {
         IntentFilter filter2 = new IntentFilter();
         filter2.addAction(Intent.ACTION_SCREEN_OFF);
         registerReceiver(new SreenBroadCaseReceiver(), filter2);
+
+        IntentFilter filter3 = new IntentFilter();
+        filter3.addAction(Constant.UPDATEAPK_ACTION);
+        registerReceiver(new SreenBroadCaseReceiver(), filter3);
 
         ConfigUtil.init(getApplicationContext(), ConfigUtil.CONFIGNAME);
 
@@ -258,6 +261,8 @@ public class Service1 extends Service {
                 ConfigEntity configEntity = iterator.next();
                 if (DateUtil.isLockedTime(configEntity.startTime, configEntity.endTime)) {
                     isNeedLocked = true;
+                    ConfigUtil.addLockedTime(getApplicationContext(), configEntity.startTime, configEntity.endTime);
+                    NotifyMessageController.uploadLockedTime(getApplicationContext());
                     break;
                 }
             }
@@ -266,6 +271,8 @@ public class Service1 extends Service {
             }
 //            handler.sendEmptyMessageDelayed(0, lockTimeIntervel);
             MLog.i(TAG, "isNeedLocked->" + isNeedLocked);
+
+
         } else {
             LASTKEEPALIVE = System.currentTimeMillis();
             String studentInfo = Constant.getStudentInfo(getApplicationContext());
@@ -293,6 +300,7 @@ public class Service1 extends Service {
                     e.printStackTrace();
                 }
             }
+            NotifyMessageController.uploadLockedTime(getApplicationContext());
         }
 
 

@@ -51,7 +51,7 @@ public class ShutdownReceiver extends BroadcastReceiver {
             });
             MyApplication1.mRequestQueue.add(jsonObjectRequest);
         } catch (Exception e) {
-
+             e.printStackTrace();
         }
     }
 }

@@ -40,7 +40,7 @@ public class StudentInfoActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_info);
         String info = Constant.getStudentInfo(getApplicationContext());
-
+        NotifyMessageController.updateVersion(this);
 
         if (TextUtils.isEmpty(info)) {
             startActivity(new Intent(this, StudentModifyActivity.class));

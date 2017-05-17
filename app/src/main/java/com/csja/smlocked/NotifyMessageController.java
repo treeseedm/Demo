@@ -5,6 +5,8 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.view.Gravity;
 import android.view.View;
@@ -48,6 +50,7 @@ public class NotifyMessageController {
     public static long keepAliveIntevel = 5 * 60 * 1000;
     public static long lockTimeIntervel = 30 * 1000;
     public static long UPDATETIMELOCKED = 12 * 60 * 60 * 1000;
+
 
     public static void bindParent(final Context context, String t,
                                   String description, String customContentString) throws JSONException {
@@ -151,34 +154,50 @@ public class NotifyMessageController {
      * @param savePath
      * @throws IOException
      */
-    public static void downLoadFromUrl(String urlStr, String fileName, String savePath) throws IOException {
-        URL url = new URL(urlStr);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        //设置超时间为3秒
-        conn.setConnectTimeout(3 * 1000);
-        //防止屏蔽程序抓取而返回403错误
-        conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+    public static void downLoadFromUrl(final Context context, final String urlStr, final String fileName, final String savePath) throws IOException {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL(urlStr);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    //设置超时间为3秒
+                    conn.setConnectTimeout(3 * 1000);
+                    //防止屏蔽程序抓取而返回403错误
+                    conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
 
-        //得到输入流
-        InputStream inputStream = conn.getInputStream();
-        //获取自己数组
-        byte[] getData = readInputStream(inputStream);
+                    //得到输入流
+                    InputStream inputStream = conn.getInputStream();
+                    //获取自己数组
+                    byte[] getData = readInputStream(inputStream);
 
-        //文件保存位置
-        File saveDir = new File(savePath);
-        if (!saveDir.exists()) {
-            saveDir.mkdir();
-        }
-        File file = new File(saveDir + File.separator + fileName);
-        FileOutputStream fos = new FileOutputStream(file);
-        fos.write(getData);
-        if (fos != null) {
-            fos.close();
-        }
-        if (inputStream != null) {
-            inputStream.close();
-        }
-        System.out.println("info:" + url + " download success");
+                    //文件保存位置
+                    File saveDir = new File(savePath);
+                    if (!saveDir.exists()) {
+                        saveDir.mkdir();
+                    }
+                    for (File file : saveDir.listFiles()) {
+                        file.delete();
+                    }
+                    File file = new File(saveDir + File.separator + fileName);
+                    FileOutputStream fos = new FileOutputStream(file);
+                    fos.write(getData);
+                    if (fos != null) {
+                        fos.close();
+                    }
+                    if (inputStream != null) {
+                        inputStream.close();
+                    }
+                    MLog.i(TAG, "info:" + url + " download success");
+                    context.sendBroadcast(new Intent(Constant.UPDATEAPK_ACTION));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        }).start();
+
     }
 
     /**
@@ -229,4 +248,73 @@ public class NotifyMessageController {
         }
 
     }
+
+    public static void updateVersion(final Context context) {
+        String path = "setting/getVersion";
+        JsonObjectReqeustWrapper jsonObjectReqeustWrapper = new JsonObjectReqeustWrapper(Request.Method.GET, path, null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                if (response != null) {
+                    MLog.i(TAG, response.toString());
+                    if (!getVersionName(context).equals(response.optString("versionCode"))) {
+                        String downLoadUrL = response.optString("downLoadUrl");
+                        try {
+                            downLoadFromUrl(context, downLoadUrL, response.getString("versionCode") + ".apk", Constant.DOWNLOAD_PATH);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } else {
+                    Toast.makeText(context, context.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, context.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+            }
+        });
+        MyApplication1.mRequestQueue.add(jsonObjectReqeustWrapper);
+    }
+
+    public static String getVersionName(Context context) {
+        PackageManager packageManager = context.getPackageManager();
+        PackageInfo packageInfo;
+        String versionName = "";
+        try {
+            packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
+            versionName = packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return versionName;
+    }
+
+    public static void uploadLockedTime(final Context context) {
+        long studentId = Constant.getStudentId(context);
+        for (final ConfigEntity configEntity : ConfigUtil.lockedTime) {
+            String path = "setting/lockScreen" + "?studentId=" + URLEncoder.encode("" + studentId) + "&create_date=" + URLEncoder.encode("" + configEntity.startTime);
+            JsonObjectReqeustWrapper jsonObjectReqeustWrapper = new JsonObjectReqeustWrapper(Request.Method.GET, path, null, new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(JSONObject response) {
+                    if (response != null) {
+                        ConfigUtil.removeLockedTime(context, configEntity);
+                        MLog.i(TAG, response.toString());
+                    } else {
+                        MLog.i(TAG, "上传锁屏时间失败");
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    MLog.i(TAG, "上传锁屏时间失败");
+                }
+            });
+            MyApplication1.mRequestQueue.add(jsonObjectReqeustWrapper);
+        }
+
+    }
+
 }

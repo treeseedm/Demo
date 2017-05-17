@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -241,7 +242,13 @@ public class LockedWindow {
 
     public static WindowManager.LayoutParams generateLayoutParams(Context context) {
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        lp.type = WindowManager.LayoutParams.TYPE_TOAST;
+        MLog.i(TAG, android.os.Build.MODEL);
+        if (Build.MODEL.contains("vivo")) {
+            lp.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
+        } else {
+            lp.type = WindowManager.LayoutParams.TYPE_TOAST;
+        }
+
         lp.flags |= WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD;
         lp.x = 0;
         lp.y = 0;
