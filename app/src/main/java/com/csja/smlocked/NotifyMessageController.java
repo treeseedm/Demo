@@ -168,6 +168,7 @@ public class NotifyMessageController {
 
                     //得到输入流
                     InputStream inputStream = conn.getInputStream();
+                    MLog.i(TAG,"SIZE:"+inputStream.available());
                     //获取自己数组
                     byte[] getData = readInputStream(inputStream);
 
@@ -294,7 +295,8 @@ public class NotifyMessageController {
     public static void uploadLockedTime(final Context context) {
         long studentId = Constant.getStudentId(context);
         for (final ConfigEntity configEntity : ConfigUtil.lockedTime) {
-            String path = "setting/lockScreen" + "?studentId=" + URLEncoder.encode("" + studentId) + "&create_date=" + URLEncoder.encode("" + configEntity.startTime);
+
+            String path = "setting/lockScreen" + "?studentId=" + URLEncoder.encode("" + studentId) + "&create_date=" + URLEncoder.encode("" + DateUtil.formatDate("yyyy-MM-dd HH:mm:ss", configEntity.startTime));
             JsonObjectReqeustWrapper jsonObjectReqeustWrapper = new JsonObjectReqeustWrapper(Request.Method.GET, path, null, new Response.Listener<JSONObject>() {
 
                 @Override
